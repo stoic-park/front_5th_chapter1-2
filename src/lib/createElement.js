@@ -1,4 +1,4 @@
-// import { addEvent } from "./eventManager";
+import { addEvent } from "./eventManager";
 // 1. vNode가 null, undefined, boolean 일 경우, 빈 텍스트 노드를 반환합니다.
 // 2. vNode가 문자열이나 숫자면 텍스트 노드를 생성하여 반환합니다.
 // 3. vNode가 배열이면 DocumentFragment를 생성하고 각 자식에 대해 createElement를 재귀 호출하여 추가합니다.
@@ -55,6 +55,9 @@ function updateAttributes($el, props) {
   Object.entries(props).forEach(([key, value]) => {
     if (key === "className") {
       $el.className = value;
+    } else if (key.startsWith("on")) {
+      // 이벤트 핸들러는 setAttribute를 사용하지 않고 직접 addEvent만 호출
+      addEvent($el, key, value);
     } else {
       $el.setAttribute(key, value);
     }

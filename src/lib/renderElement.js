@@ -1,25 +1,36 @@
 import { setupEventListeners } from "./eventManager";
 import { createElement } from "./createElement";
 import { normalizeVNode } from "./normalizeVNode";
-// import { updateElement } from "./updateElement";
+import { updateElement } from "./updateElement";
 
-// vNode를 정규화 한 다음에
-// createElement로 노드를 만들고
-// container에 삽입하고
-// 이벤트를 등록합니다.
+/** 
+ * basic
+ * vNode를 정규화 한 다음에
+ * createElement로 노드를 만들고
+ * container에 삽입하고
+ * 이벤트를 등록합니다.
 
-//TODO: advanced
-// - 최초 렌더링일 때는 createElement 사용
-// - 리렌더링일 때는 updateElement 사용
+ * advanced
+ * - 최초 렌더링일 때는 createElement 사용
+ * - 리렌더링일 때는 updateElement 사용
+ */
 
 export function renderElement(vNode, container) {
   const normalizedVNode = normalizeVNode(vNode);
-  const element = createElement(normalizedVNode);
+  const oldNode = container._vNode;
 
-  // 컨테이너의 내용을 비우고 새로운 요소 추가
-  container.innerHTML = "";
-  container.appendChild(element);
+  if (!oldNode) {
+    // 최초 렌더링일 경우 createElement
+    const element = createElement(normalizedVNode);
+    container.appendChild(element);
+  } else {
+    // 업데이트일 경우 updateElement(target, newNode, oldNode)
+    updateElement(container, normalizedVNode, oldNode);
+  }
 
-  // 모든 요소에 대해 이벤트 리스너 설정
+  // 이벤트 리스너 설정 (eventManager가 내부적으로 이전 리스너 정리)
   setupEventListeners(container);
+
+  // 최신화
+  container._vNode = normalizedVNode;
 }

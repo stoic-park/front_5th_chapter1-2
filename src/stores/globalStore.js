@@ -54,14 +54,45 @@ export const globalStore = createStore(
       return { ...state, currentUser: null, loggedIn: false };
     },
     addPost(state, content) {
+      if (!state.loggedIn || !content.trim()) return state;
+
       const newPost = {
-        id: state.posts[state.posts.length - 1].id + 1,
+        id: state.posts.length + 1,
         author: state.currentUser.username,
         time: Date.now(),
-        content,
+        content: content.trim(),
         likeUsers: [],
       };
       return { ...state, posts: [...state.posts, newPost] };
     },
+    //TODO: 좋아요 토글 기능도 action으로 변경
+    // toggleLike(state, postId) {
+    //   if (!state.loggedIn) {
+    //     alert("로그인 후 이용해주세요");
+    //     return state;
+    //   }
+
+    //   const updatedPosts = state.posts.map((post) => {
+    //     if (post.id === postId) {
+    //       const isLikedIndex = post.likeUsers.findIndex(
+    //         (user) => user === state.currentUser.username,
+    //       );
+    //       const newLikeUsers =
+    //         isLikedIndex >= 0
+    //           ? post.likeUsers.filter(
+    //               (user) => user !== state.currentUser.username,
+    //             )
+    //           : [...post.likeUsers, state.currentUser.username];
+
+    //       return {
+    //         ...post,
+    //         likeUsers: newLikeUsers,
+    //       };
+    //     }
+    //     return post;
+    //   });
+
+    //   return { ...state, posts: updatedPosts };
+    // },
   },
 );

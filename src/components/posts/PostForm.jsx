@@ -4,15 +4,15 @@ import { globalStore } from "../../stores/globalStore";
 
 export const PostForm = () => {
   // 포스트 작성
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const postContent = document.getElementById("post-content").value;
+  const handleSubmit = () => {
+    const postContent = document.getElementById("post-content").value.trim();
 
     if (postContent) {
       globalStore.actions.addPost(postContent);
       document.getElementById("post-content").value = "";
     }
   };
+
   return (
     <div className="mb-4 bg-white rounded-lg shadow p-4">
       <textarea
